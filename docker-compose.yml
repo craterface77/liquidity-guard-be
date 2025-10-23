@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    container_name: liquidityguard-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3000}:3000"
+  db:
+    image: postgres:15-alpine
+    container_name: liquidityguard-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER:-liquidityguard}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-liquidityguard}
+      POSTGRES_DB: ${DB_NAME:-liquidityguard}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-liquidityguard}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

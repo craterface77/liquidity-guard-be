@@ -1,0 +1,29 @@
+{
+  "name": "liquidity-guard-be",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node --enable-source-maps dist/server.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.4.2",
+    "@fastify/sensible": "^5.2.0",
+    "@fastify/swagger": "^8.12.1",
+    "@fastify/swagger-ui": "^1.10.2",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "pg": "^8.11.5",
+    "fastify": "^4.27.0",
+    "viem": "^2.12.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "pino-pretty": "^11.2.2",
+    "tsx": "^4.15.7",
+    "typescript": "^5.4.5"
+  }
+}
