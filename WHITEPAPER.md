@@ -56,23 +56,54 @@ Example: When PYUSD depegs from $1.00 to $0.90, borrowers using PYUSD as collate
 ## Solution Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Smart Contracts (EVM)                      │
-│  PolicyDistributor • PayoutModule • ReservePool • PolicyNFT     │
-└────────┬──────────────────┬──────────────────────────────────────┘
-         │                  │
-         ↓                  ↓
-┌────────────────┐   ┌──────────────────────┐
-│   Backend API  │   │  Validator Service   │
-│   Fastify      │◄──┤  Monitoring + Oracle │
-│   PostgreSQL   │   │  ClickHouse          │
-└────────┬───────┘   └──────┬───────────────┘
-         │                  │
-         ↓                  ↓
-    ┌────────────────────────────┐
-    │    External Data Sources    │
-    │  Chainlink • Pyth • Aave   │
-    └────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                     USER (Web Browser)                       │
+└────────────┬────────────────────────────────────────────────┘
+             │
+             │ Wallet Connect (WalletConnect v3)
+             │
+┌────────────▼────────────────────────────────────────────────┐
+│         Frontend (Next.js + wagmi + viem)                    │
+│  - Insurance dashboard UI                                    │
+│  - Wallet integration (MetaMask, WalletConnect, Coinbase)    │
+│  - Contract interactions (approve, buyPolicy, executeClaim)  │
+│  - Real-time policy status updates                           │
+└────────┬──────────────────────────────┬─────────────────────┘
+         │                              │
+         │ REST API calls               │ On-chain txs
+         │                              │
+┌────────▼──────────────────────┐   ┌──▼────────────────────────┐
+│  Backend API (Fastify + PG)   │   │  Smart Contracts (Base)    │
+│  - Pricing engine             │   │  - PolicyDistributor       │
+│  - Policy drafts              │   │  - PolicyNFT               │
+│  - Claim coordination         │   │  - PayoutModule            │
+│  - Validator proxy            │   │  - ReservePool             │
+│  - Admin operations           │   │  - OracleAnchors           │
+└────────┬──────────────────────┘   └──┬────────────────────────┘
+         │                              │
+         │ HMAC webhooks                │ Write anchors
+         │ REST API calls               │ Sign claims
+         │                              │
+┌────────▼──────────────────────────────▼─────────────────────┐
+│      Validator Service (Fastify + ClickHouse)               │
+│  - Curve pool monitoring (60s polls)                        │
+│  - Aave liquidation detection                               │
+│  - Depeg state machine (15min grace period)                 │
+│  - EIP-712 claim signing                                    │
+│  - Time-series storage (OLAP queries)                       │
+│  - IPFS snapshot uploads                                    │
+└────────┬────────────────────────────────────────────────────┘
+         │
+         │ RPC calls (Chainlink, contract reads)
+         │ Hermes API (Pyth Network)
+         │
+┌────────▼────────────────────────────────────────────────────┐
+│                    Blockchain Layer                          │
+│  - Chainlink Price Feeds (PYUSD/USD)                        │
+│  - Pyth Hermes API (fallback)                               │
+│  - Curve Pool contracts (get_dy, balances)                  │
+│  - Aave LendingPool (LiquidationCall events)                │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Component Responsibilities
