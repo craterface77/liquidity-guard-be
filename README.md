@@ -154,7 +154,7 @@ curl -X POST http://localhost:3000/v1/quote \
   -H "Content-Type: application/json" \
   -d '{
     "product": "DEPEG_LP",
-    "poolId": "curve-usdc-usdf",
+    "poolId": "curve-usdc-pyusd",
     "insuredLP": "10000000000000000000",
     "termDays": 30
   }'
@@ -185,7 +185,7 @@ curl -X POST http://localhost:3000/v1/policies \
   -d '{
     "wallet": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
     "product": "DEPEG_LP",
-    "poolId": "curve-usdc-usdf",
+    "poolId": "curve-usdc-pyusd",
     "insuredLP": "10000000000000000000",
     "termDays": 30
   }'
@@ -198,7 +198,7 @@ Response includes EIP-712 signature for use in on-chain transaction:
   "draftId": "uuid",
   "quote": {
     "product": "DEPEG_LP",
-    "poolId": "curve-usdc-usdf",
+    "poolId": "curve-usdc-pyusd",
     "insuredLP": "10000000000000000000",
     "premiumUSD": 198.0,
     "coverageCapUSD": 8910.0,
@@ -417,7 +417,7 @@ CHAIN_ID=1
 
 # Pool Monitoring
 POOL_ADDRESS=0x...
-POOL_ID=curve-usdc-usdf
+POOL_ID=curve-usdc-pyusd
 DEPEG_THRESHOLD=0.02
 
 # Aave Monitoring (optional)

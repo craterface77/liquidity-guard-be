@@ -29,6 +29,10 @@ The protocol operates across three main components:
 
 ---
 
+## Presentation:
+
+[Link](https://drive.google.com/file/d/1yP49cf_1JvPANJua79RxxnQTTUNXJGbo/view?usp=sharing)
+
 ## Problem Statement
 
 ### 1. Stablecoin Depeg Risk
@@ -215,7 +219,7 @@ Backend receives quote request:
 ```json
 {
   "product": "DEPEG_LP",
-  "poolId": "curve-usdc-usdf",
+  "poolId": "curve-usdc-pyusd",
   "insuredLP": "10000000000000000000",
   "termDays": 30
 }
@@ -927,7 +931,7 @@ CHAIN_ID=1
 
 # Curve Monitoring
 POOL_ADDRESS=0x...
-POOL_ID=curve-usdc-usdf
+POOL_ID=curve-usdc-pyusd
 DEPEG_THRESHOLD=0.02
 POLL_INTERVAL_MS=10000
 
